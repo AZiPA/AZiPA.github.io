@@ -1,6 +1,6 @@
 ---
 title: Telegram Business Assistant
-description: Serverless Telegram Business assistant for deleted message recovery, silent edit tracking, View-Once capture, and per-contact topics.
+description: Serverless Telegram Business assistant (Telegram Secretary) for deleted message recovery, silent edit tracking, View-Once capture, and per-contact topics.
 date: 2026-11-19
 tags:
   - Telegram Serverless

@@ -1,9 +1,9 @@
 ---
 title: Telegram Business Assistant
-description: Overview of Telegram Business Assistant, a serverless bot for deleted message recovery, silent edit tracking, View-Once capture, and per-contact topics.
+description: Overview of Telegram Business Assistant (Telegram Secretary), a serverless bot for deleted message recovery, silent edit tracking, and View-Once capture.
 ---
 
-**Telegram Business Assistant** ([AZiPA/telegram-chat-automation](https://github.com/AZiPA/telegram-chat-automation)) is a personal, single-owner automation assistant for **Telegram Business** accounts. Built for **Telegram Serverless** (`@tgcloud/cli ^0.2.0`), it runs inside V8 isolates with a built-in SQLite database (`sdk/db` Drizzle-style DSL), zero runtime `node_modules`, and no VPS, containers, or external hosting required.
+**Telegram Business Assistant** ([AZiPA/telegram-chat-automation](https://github.com/AZiPA/telegram-chat-automation)) is a personal, single-owner automation assistant (also known as a Telegram Secretary) for **Telegram Business** accounts. Built for **Telegram Serverless** (`@tgcloud/cli ^0.2.0`), it runs inside V8 isolates with a built-in SQLite database (`sdk/db` Drizzle-style DSL), zero runtime `node_modules`, and no VPS, containers, or external hosting required.
 
 :::note[Bot-Only Serverless Project]
 `tgcloud.jsonc` defines no `"static"` front-end and there are no Mini App `endpoints/`. All interactions happen directly inside Telegram—between your Business chats and your private chat with the bot. The repository uses `"private": true` in `package.json` as a bot deployment project and is licensed under `MPL-2.0`.
