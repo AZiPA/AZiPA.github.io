@@ -1,0 +1,46 @@
+:root {
+  --az-text: var(--sl-color-text);
+  --az-text-strong: var(--sl-color-white);
+  --az-text-muted: var(--sl-color-gray-3);
+  --az-text-invert: var(--sl-color-text-invert);
+  --az-focus-ring: var(--sl-color-accent);
+
+  --az-status-active-bg: var(--sl-color-green-low);
+  --az-status-active-text: var(--sl-color-green-high);
+  --az-status-experimental-bg: var(--sl-color-orange-low);
+  --az-status-experimental-text: var(--sl-color-orange-high);
+  --az-status-archived-bg: var(--sl-color-gray-5);
+  --az-status-archived-text: var(--sl-color-gray-2);
+
+  --az-radius-sm: 0.375rem;
+  --az-radius-md: 0.75rem;
+  --az-radius-lg: 1rem;
+  --az-radius-pill: 999px;
+}
+
+:root,
+:root[data-theme='dark'] {
+  --az-surface: var(--sl-color-gray-6);
+  --az-surface-elevated: var(--sl-color-black);
+  --az-surface-hover: var(--sl-color-gray-5);
+  --az-border: var(--sl-color-gray-5);
+  --az-border-strong: var(--sl-color-gray-4);
+  --az-accent: var(--sl-color-accent-high);
+  --az-accent-bg: var(--sl-color-accent);
+  --az-accent-soft: var(--sl-color-accent-low);
+  --az-tag-bg: var(--sl-color-black);
+  --az-shadow-card: var(--sl-shadow-sm);
+}
+
+:root[data-theme='light'] {
+  --az-surface: var(--sl-color-gray-7);
+  --az-surface-elevated: var(--sl-color-black);
+  --az-surface-hover: var(--sl-color-gray-6);
+  --az-border: var(--sl-color-gray-5);
+  --az-border-strong: var(--sl-color-gray-4);
+  --az-accent: var(--sl-color-accent);
+  --az-accent-bg: var(--sl-color-accent);
+  --az-accent-soft: var(--sl-color-accent-low);
+  --az-tag-bg: var(--sl-color-black);
+  --az-shadow-card: var(--sl-shadow-sm);
+}

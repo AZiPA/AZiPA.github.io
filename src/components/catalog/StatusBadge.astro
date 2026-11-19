@@ -1,0 +1,40 @@
+---
+import type { ProjectStatus } from '../../config/ui.ts';
+
+interface Props {
+  status: ProjectStatus;
+  label: string;
+}
+
+const { status, label } = Astro.props;
+---
+
+<span class:list={['az-badge', `az-badge--${status}`]}>{label}</span>
+
+<style>
+  .az-badge {
+    display: inline-flex;
+    align-items: center;
+    padding-block: 0.1875rem;
+    padding-inline: 0.625rem;
+    border-radius: var(--az-radius-pill);
+    font-size: var(--sl-text-xs);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .az-badge--active {
+    background-color: var(--az-status-active-bg);
+    color: var(--az-status-active-text);
+  }
+
+  .az-badge--experimental {
+    background-color: var(--az-status-experimental-bg);
+    color: var(--az-status-experimental-text);
+  }
+
+  .az-badge--archived {
+    background-color: var(--az-status-archived-bg);
+    color: var(--az-status-archived-text);
+  }
+</style>

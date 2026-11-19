@@ -1,0 +1,108 @@
+---
+import { UI_COPY } from '../../config/ui.ts';
+import { getPersianCounterpartPath } from '../../lib/lang-banner.ts';
+
+const faHref = getPersianCounterpartPath(Astro.url.pathname);
+const copy = UI_COPY.en.banner;
+---
+
+<aside
+  class="az-lang-banner"
+  data-az-lang-banner
+  data-pagefind-ignore
+  dir="rtl"
+  lang="fa"
+  aria-label={copy.regionLabel}
+  hidden
+>
+  <div class="az-lang-banner__inner">
+    <p class="az-lang-banner__text">
+      {copy.message}
+      <a class="az-lang-banner__link" href={faHref}>{copy.actionLabel}</a>
+    </p>
+    <button
+      type="button"
+      class="az-lang-banner__close"
+      data-az-lang-dismiss
+      aria-label={copy.dismissLabel}
+    >
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M6 6l12 12M18 6L6 18"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+  </div>
+</aside>
+
+<script>
+  import { initLanguageBanner } from '../../lib/lang-banner.ts';
+  initLanguageBanner();
+</script>
+
+<style>
+  .az-lang-banner {
+    background-color: var(--az-accent-soft);
+    border-block-end: 1px solid var(--az-border);
+    color: var(--az-text-strong);
+    padding-block: 0.625rem;
+    padding-inline: var(--sl-nav-pad-x);
+  }
+
+  .az-lang-banner[hidden] {
+    display: none;
+  }
+
+  .az-lang-banner__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    max-inline-size: var(--sl-content-width);
+    margin-inline: auto;
+  }
+
+  .az-lang-banner__text {
+    margin: 0;
+    font-size: var(--sl-text-sm);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .az-lang-banner__link {
+    color: var(--az-accent);
+    font-weight: 600;
+    text-underline-offset: 0.2em;
+  }
+
+  .az-lang-banner__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 2.25rem;
+    min-block-size: 2.25rem;
+    border: 1px solid var(--az-border);
+    border-radius: var(--az-radius-sm);
+    background-color: transparent;
+    color: var(--az-text-strong);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .az-lang-banner__close:focus-visible,
+  .az-lang-banner__link:focus-visible {
+    outline: 2px solid var(--az-focus-ring);
+    outline-offset: 2px;
+  }
+
+  @media (hover: hover) {
+    .az-lang-banner__close:hover {
+      background-color: var(--az-surface-hover);
+    }
+  }
+</style>

@@ -1,0 +1,11 @@
+---
+import type { JsonLdObject } from '../../lib/seo.ts';
+
+interface Props {
+  data: JsonLdObject | JsonLdObject[];
+}
+
+const serialized = JSON.stringify(Astro.props.data).replace(/</g, '\\u003c');
+---
+
+<script is:inline type="application/ld+json" set:html={serialized} />

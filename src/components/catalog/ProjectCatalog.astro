@@ -1,0 +1,90 @@
+---
+import { UI_COPY, type Locale } from '../../config/ui.ts';
+import { getLocalizedProjects, getUniqueTags } from '../../lib/projects.ts';
+import ProjectCard from './ProjectCard.astro';
+import TagFilter from './TagFilter.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const projects = await getLocalizedProjects(lang);
+const tags = getUniqueTags(projects);
+const copy = UI_COPY[lang].catalog;
+const gridId = `az-catalog-grid-${lang}`;
+const tplAll = copy.countLabel('{shown}', '{total}', 'all');
+const tplTag = copy.countLabel('{shown}', '{total}', '{tag}');
+---
+
+<section id="projects" class="az-catalog" aria-labelledby="projects-heading" data-az-catalog>
+  <div class="az-catalog__header">
+    <h2 id="projects-heading" class="az-catalog__heading">{copy.heading}</h2>
+    {tags.length > 0 && <TagFilter tags={tags} lang={lang} controlsId={gridId} />}
+  </div>
+
+  <p
+    class="az-catalog__status"
+    role="status"
+    aria-live="polite"
+    data-az-catalog-status
+    data-tpl-all={tplAll}
+    data-tpl-tag={tplTag}
+  >
+    {copy.countLabel(projects.length, projects.length, 'all')}
+  </p>
+
+  <div id={gridId} class="az-catalog__grid" data-az-catalog-grid>
+    {projects.map((project) => (
+      <ProjectCard project={project} lang={lang} />
+    ))}
+  </div>
+
+  <p class="az-catalog__empty" data-az-catalog-empty hidden>
+    {copy.emptyState}
+  </p>
+</section>
+
+<script>
+  import { initCatalogFilters } from '../../lib/catalog-filter.ts';
+  initCatalogFilters();
+</script>
+
+<style>
+  .az-catalog {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .az-catalog__header {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .az-catalog__heading {
+    margin: 0;
+    font-size: var(--sl-text-h2);
+    font-weight: 700;
+  }
+
+  .az-catalog__status {
+    margin: 0;
+    font-size: var(--sl-text-sm);
+    color: var(--az-text-muted);
+  }
+
+  .az-catalog__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: 1.25rem;
+  }
+
+  .az-catalog__empty {
+    margin: 0;
+    padding: 1.5rem;
+    border: 1px dashed var(--az-border);
+    border-radius: var(--az-radius-md);
+    color: var(--az-text-muted);
+    text-align: center;
+  }
+</style>

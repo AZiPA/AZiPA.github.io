@@ -1,0 +1,18 @@
+---
+import EmptyPage from '../components/layout/EmptyPage.astro';
+import AboutContent from '../components/layout/AboutContent.astro';
+import { UI_COPY } from '../config/ui.ts';
+import { buildPersonJsonLd } from '../lib/seo.ts';
+
+const lang = 'en';
+const copy = UI_COPY[lang].about;
+---
+
+<EmptyPage
+  title={copy.pageTitle}
+  description={copy.seoDescription}
+  lang={lang}
+  jsonLd={buildPersonJsonLd(lang)}
+>
+  <AboutContent lang={lang} />
+</EmptyPage>

@@ -1,0 +1,75 @@
+---
+interface HeroAction {
+  href: string;
+  label: string;
+  variant: 'primary' | 'secondary';
+  external?: boolean;
+}
+
+interface Props {
+  titleId: string;
+  eyebrow: string;
+  title: string;
+  tagline: string;
+  actions: HeroAction[];
+}
+
+const { titleId, eyebrow, title, tagline, actions } = Astro.props;
+---
+
+<section class="az-hero" aria-labelledby={titleId}>
+  <span class="az-hero__eyebrow">{eyebrow}</span>
+  <h1 id={titleId} class="az-hero__title">{title}</h1>
+  <p class="az-hero__tagline">{tagline}</p>
+  <div class="az-hero__actions">
+    {actions.map(({ href, label, variant, external }) => (
+      <a
+        class:list={['az-btn', `az-btn--${variant}`]}
+        href={href}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
+      >
+        {label}
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .az-hero {
+    display: grid;
+    gap: 1rem;
+    padding-block: clamp(0.75rem, 2vw, 1.5rem) clamp(1.75rem, 3.5vw, 2.5rem);
+    border-block-end: 1px solid var(--az-border);
+  }
+
+  .az-hero__eyebrow {
+    font-size: var(--sl-text-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--az-accent);
+  }
+
+  :root[dir='rtl'] .az-hero__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .az-hero__title {
+    font-size: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+    font-weight: 700;
+  }
+
+  .az-hero__tagline {
+    font-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.25rem);
+    color: var(--az-text);
+  }
+
+  .az-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block-start: 0.5rem;
+  }
+</style>

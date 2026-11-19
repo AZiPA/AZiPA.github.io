@@ -1,0 +1,57 @@
+---
+import { UI_COPY, type Locale } from '../../config/ui.ts';
+import PageHero from './PageHero.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const copy = UI_COPY[lang].about;
+const homeHref = lang === 'fa' ? '/fa/#projects' : '/#projects';
+---
+
+<PageHero
+  titleId="about-hero-title"
+  eyebrow={copy.eyebrow}
+  title={copy.heading}
+  tagline={copy.lead}
+  actions={[
+    { href: 'https://github.com/AZiPA', label: copy.githubCta, variant: 'primary', external: true },
+    { href: homeHref, label: copy.projectsCta, variant: 'secondary' },
+  ]}
+/>
+
+<section class="az-about-focus" aria-labelledby="about-focus-title">
+  <h2 id="about-focus-title" class="az-about-focus__heading">{copy.focusHeading}</h2>
+  <ul class="az-about-focus__list">
+    {copy.focusItems.map((item) => (
+      <li class="az-about-focus__item">{item}</li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .az-about-focus {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .az-about-focus__heading {
+    margin: 0;
+    font-size: var(--sl-text-h2);
+    font-weight: 700;
+  }
+
+  .az-about-focus__list {
+    display: grid;
+    gap: 0.75rem;
+    padding-inline-start: 1.25rem;
+    margin: 0;
+    max-inline-size: 65ch;
+  }
+
+  .az-about-focus__item {
+    color: var(--az-text);
+  }
+</style>

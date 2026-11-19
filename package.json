@@ -1,0 +1,31 @@
+{
+  "name": "azipa-github-io",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "preview": "astro preview",
+    "validate": "node scripts/validate-content.mjs",
+    "validate:fix": "node scripts/validate-content.mjs --fix",
+    "check": "astro check",
+    "build": "node scripts/validate-content.mjs && astro check && astro build"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "0.43.1",
+    "@fontsource-variable/vazirmatn": "5.3.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/ibm-plex-sans": "5.3.0",
+    "astro": "7.4.13",
+    "astro-mermaid": "2.2.0",
+    "starlight-links-validator": "0.27.0",
+    "starlight-sidebar-topics": "0.9.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "typescript": "6.0.3",
+    "yaml": "2.9.1"
+  }
+}

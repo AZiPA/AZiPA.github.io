@@ -1,0 +1,29 @@
+---
+import EmptyPage from '../../components/layout/EmptyPage.astro';
+import PageHero from '../../components/layout/PageHero.astro';
+import ProjectCatalog from '../../components/catalog/ProjectCatalog.astro';
+import { UI_COPY } from '../../config/ui.ts';
+import { buildWebSiteJsonLd } from '../../lib/seo.ts';
+
+const lang = 'fa';
+const copy = UI_COPY[lang].home;
+---
+
+<EmptyPage
+  title={copy.pageTitle}
+  description={copy.seoDescription}
+  lang={lang}
+  jsonLd={buildWebSiteJsonLd(lang)}
+>
+  <PageHero
+    titleId="home-hero-title"
+    eyebrow={copy.eyebrow}
+    title={copy.heading}
+    tagline={copy.tagline}
+    actions={[
+      { href: '#projects', label: copy.browseCta, variant: 'primary' },
+      { href: '/fa/about/', label: copy.aboutCta, variant: 'secondary' },
+    ]}
+  />
+  <ProjectCatalog lang={lang} />
+</EmptyPage>

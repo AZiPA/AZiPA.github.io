@@ -1,0 +1,31 @@
+---
+import type { ComponentProps } from 'astro/types';
+import DefaultSearch from '@astrojs/starlight/components/Search.astro';
+
+type Props = ComponentProps<typeof DefaultSearch>;
+---
+
+<DefaultSearch {...Astro.props} />
+
+<script>
+  import { normalizePersian } from '../../lib/persian.ts';
+
+  function handleSearchInput(event: Event): void {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    if (!target.classList.contains('pagefind-ui__search-input')) return;
+
+    const normalized = normalizePersian(target.value);
+    if (normalized === target.value) return;
+
+    const start = target.selectionStart;
+    const end = target.selectionEnd;
+    target.value = normalized;
+    if (start !== null && end !== null) {
+      target.setSelectionRange(start, end);
+    }
+    target.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  document.addEventListener('input', handleSearchInput, true);
+</script>

@@ -1,0 +1,27 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import type { Locale } from '../../config/ui.ts';
+import type { JsonLdObject } from '../../lib/seo.ts';
+import JsonLd from '../seo/JsonLd.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Locale;
+  jsonLd?: JsonLdObject | JsonLdObject[];
+}
+
+const { title, description, lang, jsonLd } = Astro.props;
+---
+
+<StarlightPage
+  frontmatter={{ title, description, template: 'splash', editUrl: false }}
+  hasSidebar={false}
+  lang={lang}
+  dir={lang === 'fa' ? 'rtl' : 'ltr'}
+>
+  <div class="az-empty-page not-content">
+    <slot />
+  </div>
+  {jsonLd && <JsonLd data={jsonLd} />}
+</StarlightPage>

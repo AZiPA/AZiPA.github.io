@@ -1,0 +1,81 @@
+/* Scoped to EmptyPage routes only; never touches regular docs pages or 404. */
+main:has(.az-empty-page) > .content-panel:has(#_top) {
+  display: none;
+}
+
+main:has(.az-empty-page) > .content-panel + .content-panel {
+  border-top: 0;
+  padding-block: clamp(1.5rem, 3vw, 2.75rem) 2rem;
+}
+
+main:has(.az-empty-page) footer .meta:empty {
+  display: none;
+}
+
+.az-empty-page {
+  display: grid;
+  gap: clamp(2.25rem, 4vw, 3.5rem);
+}
+
+.az-empty-page [hidden] {
+  display: none;
+}
+
+.az-empty-page :is(h1, h2, h3) {
+  color: var(--az-text-strong);
+  line-height: var(--sl-line-height-headings);
+  text-wrap: balance;
+}
+
+.az-empty-page p {
+  text-wrap: pretty;
+  max-inline-size: 65ch;
+}
+
+.az-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-block-size: 2.5rem;
+  padding-block: 0.5rem;
+  padding-inline: 1.125rem;
+  border-radius: var(--az-radius-sm);
+  border: 1px solid var(--az-border-strong);
+  font-size: var(--sl-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.az-btn--primary {
+  background-color: var(--sl-color-bg-accent);
+  border-color: var(--sl-color-bg-accent);
+  color: var(--sl-color-text-invert);
+}
+
+.az-btn--secondary {
+  background-color: var(--az-surface);
+  color: var(--az-text-strong);
+}
+
+.az-btn:focus-visible {
+  outline: 2px solid var(--az-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .az-btn--primary:hover {
+    filter: brightness(1.08);
+  }
+  .az-btn--secondary:hover {
+    background-color: var(--az-surface-hover);
+    border-color: var(--az-accent);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .az-btn {
+    transition: background-color 0.15s ease, border-color 0.15s ease, filter 0.15s ease;
+  }
+}
