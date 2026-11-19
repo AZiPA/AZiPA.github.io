@@ -1,0 +1,122 @@
+---
+title: راه‌اندازی و دیپلوی
+description: راهنمای گام‌به‌گام تنظیم BotFather، دیپلوی با GitHub Actions یا CLI محلی tgcloud، ثبت اجباری مالک و فعال‌سازی در تلگرام بیزینس.
+---
+
+برای راه‌اندازی **دستیار هوشمند تلگرام بیزینس** به یک حساب کاربری دارای **تلگرام بیزینس / پرمیوم**، تنظیم یک ربات در `@BotFather` و استفاده از **GitHub Actions CI** (روش پیشنهادی) یا ابزار محلی **`@tgcloud/cli`** نیاز دارید.
+
+## ۱. پیش‌نیازها و تنظیم `@BotFather`
+
+در تلگرام وارد `@BotFather` شوید و تنظیمات زیر را برای ربات خود انجام دهید:
+
+1. **فعال‌سازی Serverless:** به مسیر `@BotFather → Your Bot → Serverless` بروید و میزبانی تلگرام سرورلس را فعال کنید.
+2. **دریافت CLI Access Token:** از مسیر `Serverless → CLI Access → Access token` توکن دسترسی با قالب `app<id>:<secret>` را کپی کنید.
+3. **روشن کردن Business Mode:** در `Bot Settings → Business Mode` حالت بیزینس را **ON** کنید.
+4. **بستن دسترسی گروه:** برای حفظ حریم خصوصی، در `Bot Settings → Allow Groups` مقدار را **OFF** قرار دهید.
+5. **فعال‌سازی Threaded Mode *(اختیاری)*:** برای دریافت اعلان هر مخاطب در یک تاپیک مجزا، در `Bot Settings → Threads Settings → Threaded Mode` این گزینه را **ON** کنید.
+6. **یافتن شناسه عددی تلگرام (`OWNER_ID`):** شناسه عددی حساب تلگرام خود را یادداشت کنید (فقط عدد صحیح مثبت، مانند `123456789`).
+
+:::caution[حتماً از توکن CLI Access سرورلس استفاده کنید]
+مقدار `TGCLOUD_TOKEN` باید **CLI Access Token** سرورلس (`app<id>:<secret>`) از مسیر `Serverless → CLI Access → Access token` باشد—**نه** توکن HTTP عادی Bot API (`123456789:AAH...`). توکن‌های استاندارد ربات در اعتبارسنجی اولیه رد می‌شوند.
+:::
+
+## ۲. انتخاب روش دیپلوی
+
+### روش اول — GitHub Actions CI (پیشنهادی، بدون نیاز به نصب محلی)
+
+از مخزن [AZiPA/telegram-chat-automation](https://github.com/AZiPA/telegram-chat-automation) یک Fork یا مخزن جدید بسازید و دو متغیر محرمانه (**Repository Secrets**) در مسیر **Settings → Secrets and variables → Actions** تعریف کنید:
+
+| Secret | الگوی اعتبارسنجی | توضیح |
+| :--- | :--- | :--- |
+| `TGCLOUD_TOKEN` | `^app[0-9]+:[^[:space:]]+$` | توکن دسترسی CLI تلگرام سرورلس |
+| `OWNER_ID` | `^[1-9][0-9]*$` | شناسه عددی تلگرام مالک ربات |
+
+گردش‌کار استقرار روی هر `push` یا به صورت دستی از **Actions → ✈️ Deploy to Telegram → Run workflow** (`workflow_dispatch`) روی Node.js `26` اجرا می‌شود.
+
+در اجرای دستی می‌توانید گزینه `migration_mode` را انتخاب کنید:
+
+| حالت (`migration_mode`) | پرچم CLI | عملکرد |
+| :--- | :--- | :--- |
+| `safe` *(پیش‌فرض)* | `--safe` | فقط تغییرات افزایشی امن را اعمال می‌کند و از حذف‌های سطح هشدار می‌گذرد *(در هر `push` همیشه همین حالت اجرا می‌شود)* |
+| `dry-run` | `--dry-run` | تغییرات در انتظار دیتابیس را بدون تغییر واقعی نمایش می‌دهد |
+| `skip` | — | مرحله مایگریشن را به طور کامل رد می‌کند |
+| `yes` | `--yes` | تغییرات امن **و** حذف‌های سطح هشدار را اعمال می‌کند — با احتیاط استفاده شود |
+
+توالی دقیق ۶ مرحله در هر اجرای CI:
+
+1. اعتبارسنجی اولیه فرمت `TGCLOUD_TOKEN` و `OWNER_ID`.
+2. نصب وابستگی‌های CLI با دستور `npm install --no-audit --no-fund`.
+3. ارسال کد به سرورلس با دستور `npx tgcloud push --force`.
+4. اجرای مایگریشن دیتابیس با `npx tgcloud migrate --<mode>` (مگر آن‌که `skip` انتخاب شده باشد).
+5. ثبت مالکیت با دستور `npx tgcloud run handlers/message "{owner_id: ${OWNER_ID}}" --ctx '{ci_bootstrap: true}'`.
+6. همگام‌سازی و بررسی وضعیت وبهوک با `npx tgcloud webhook sync` و `npx tgcloud webhook`.
+
+:::tip[تغییر امن مالک (`OWNER_ID`)]
+برای انتقال مالکیت ربات به حساب تلگرام دیگر، مقدار Secret مربوط به `OWNER_ID` را در گیت‌هاب تغییر دهید و گردش‌کار دیپلوی را دوباره اجرا کنید. تابع `setOwnerId()` داده‌های قدیمی `contact_topics`، `connections` و `topics_disabled_until` مالک قبلی را پاک‌سازی کرده و `messages` بایگانی‌شده را حفظ می‌کند.
+:::
+
+### روش دوم — دیپلوی محلی با `@tgcloud/cli`
+
+دیپلوی محلی نیازمند **Node.js `18+`** است (محیط CI از Node.js `26` استفاده می‌کند):
+
+```bash
+git clone https://github.com/AZiPA/telegram-chat-automation.git
+cd telegram-chat-automation
+npm install
+npx tgcloud login
+npx tgcloud push
+npx tgcloud migrate
+```
+
+:::note[دستور `push` دیتابیس را تغییر نمی‌دهد]
+دستور `npx tgcloud push` (یا `npm run deploy`) فقط کد زمان اجرا را بارگذاری می‌کند و هرگز تغییری در جدول‌های SQLite نمی‌دهد. پس از تغییر اسکیما همیشه `npx tgcloud migrate` را اجرا کنید.
+:::
+
+سپس **راه‌اندازی اجباری مالک (Bootstrap)** را اجرا کنید (عدد `123456789` را با شناسه عددی تلگرام خود جایگزین کنید):
+
+- **Bash / macOS / Linux:**
+
+  ```bash
+  npx tgcloud run handlers/message '{owner_id: 123456789}' --ctx '{ci_bootstrap: true}'
+  ```
+
+- **Windows CMD:**
+
+  ```cmd
+  npx tgcloud run handlers/message "{owner_id: 123456789}" --ctx "{ci_bootstrap: true}"
+  ```
+
+اطمینان حاصل کنید که خروجی شامل `{ ok: true }` باشد و سپس وضعیت وبهوک را بررسی کنید:
+
+```bash
+npx tgcloud webhook
+```
+
+اگر وضعیت وبهوک ناهمگام بود، دستور `npx tgcloud webhook sync` را اجرا کنید.
+
+## ۳. فعال‌سازی نهایی در تلگرام (ترتیب حیاتی)
+
+:::caution[این ترتیب را دقیقاً رعایت کنید]
+ابتدا در چت خصوصی به ربات پیام `/start` بفرستید و **سپس** ربات را در تنظیمات تلگرام بیزینس متصل کنید. تلگرام تا زمانی که خودتان چت را آغاز نکنید اجازه نمی‌دهد ربات به شما پیام خصوصی بدهد.
+:::
+
+1. **آغاز چت خصوصی:** ربات را در تلگرام باز کنید و `/start` را ارسال کنید. باید داشبورد **🤖 Telegram Business Assistant Status** را دریافت کنید؛ این کار ثبت موفق `OWNER_ID` را تایید کرده و امکان ارسال پیام توسط ربات را باز می‌کند.
+2. **اتصال در تلگرام بیزینس:** به **Settings → Telegram Business → Chatbots** بروید، ربات خود را انتخاب کنید و دسترسی‌های `BusinessBotRights` را اعطا نمایید:
+
+| دسترسی (`BusinessBotRights`) | کاربرد |
+| :--- | :--- |
+| `can_read_messages` | خواندن پیام‌ها برای بایگانی متن‌ها، رسانه‌ها، ویرایش‌ها و حذف‌ها |
+| `can_reply` | ارسال و پاسخ به پیام‌های چت بیزینس در صورت نیاز |
+| `can_delete_sent_messages` | حذف پیام‌های ارسال‌شده توسط خود ربات |
+| `can_delete_all_messages` | حذف خودکار ریپلای تریگر یک‌بارمشاهده *(ممکن است در رابط کاربری تلگرام با نام **Delete Received Messages** نمایش داده شود)* |
+
+3. **تایید اتصال:** از دریافت پیام **🔗 Telegram Business Connected** در چت خصوصی خود مطمئن شوید.
+
+### توقف و ازسرگیری در هر چت
+
+برای مکث یا فعال‌سازی دوباره ربات در هر گفت‌وگو، از دکمه بومی **Stop / Start** در نوار بالای همان چت بیزینس استفاده کنید. غیرفعال کردن سراسری ربات در تنظیمات تلگرام بیزینس، مقدار `is_enabled = false` را در جدول `connections` ثبت می‌کند.
+
+## گام‌های بعدی
+
+- [دستورات و پیکربندی](/fa/projects/chat-automation/commands-config/) — مشاهده تمام دستورات چت خصوصی مالک و ثابت‌های پیکربندی.
+- [معماری، دیتابیس و نگهداری](/fa/projects/chat-automation/architecture/) — بررسی هندلرها، جدول‌های SQLite و دستورات نگهداری.

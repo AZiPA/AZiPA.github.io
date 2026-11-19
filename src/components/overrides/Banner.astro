@@ -2,8 +2,9 @@
 import DefaultBanner from '@astrojs/starlight/components/Banner.astro';
 import LanguageBanner from '../i18n/LanguageBanner.astro';
 
-const { lang } = Astro.locals.starlightRoute;
+const { id, lang } = Astro.locals.starlightRoute;
+const isNotFound = id === '404';
 ---
 
 <DefaultBanner />
-{lang === 'en' && <LanguageBanner />}
+{lang === 'en' && !isNotFound && <LanguageBanner />}

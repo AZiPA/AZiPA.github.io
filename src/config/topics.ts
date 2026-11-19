@@ -2,26 +2,9 @@ import type {
   StarlightSidebarTopicsUserConfig,
   StarlightSidebarTopicsUserOptions,
 } from 'starlight-sidebar-topics';
+import { chatAutomationTopic } from './topics/chat-automation.ts';
 
-export const SIDEBAR_TOPICS: StarlightSidebarTopicsUserConfig = [
-  {
-    id: 'chat-automation',
-    label: {
-      en: 'Telegram Business Assistant',
-      fa: 'دستیار تلگرام بیزینس',
-    },
-    link: '/projects/chat-automation/',
-    items: [
-      {
-        label: 'Overview',
-        translations: {
-          fa: 'معرفی',
-        },
-        link: '/projects/chat-automation/',
-      },
-    ],
-  },
-];
+export const SIDEBAR_TOPICS: StarlightSidebarTopicsUserConfig = [chatAutomationTopic];
 
 export const TOPICS_EXCLUDE: NonNullable<
   NonNullable<StarlightSidebarTopicsUserOptions>['exclude']

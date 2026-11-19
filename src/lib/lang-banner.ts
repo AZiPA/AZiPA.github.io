@@ -1,9 +1,15 @@
 const STORAGE_KEY = 'azipa-lang-banner-dismissed';
 
+/** Return true when a pathname represents the 404 route. */
+export function isNotFoundPath(pathname: string): boolean {
+  const cleaned = pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+  return cleaned === '/404' || cleaned === '/404/';
+}
+
 /** Compute the Persian route counterpart for any English pathname. */
 export function getPersianCounterpartPath(pathname: string): string {
   const cleaned = pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
-  if (cleaned === '/' || cleaned === '/404') return '/fa/';
+  if (cleaned === '/' || isNotFoundPath(pathname)) return '/fa/';
   if (cleaned === '/fa' || cleaned.startsWith('/fa/')) return cleaned;
   const withSlash = cleaned.endsWith('/') ? cleaned : `${cleaned}/`;
   return `/fa${withSlash}`;

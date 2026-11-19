@@ -1,42 +1,48 @@
 ---
 import { UI_COPY } from '../../config/ui.ts';
-import { getPersianCounterpartPath } from '../../lib/lang-banner.ts';
+import { getPersianCounterpartPath, isNotFoundPath } from '../../lib/lang-banner.ts';
 
+const isNotFound =
+  Astro.locals.starlightRoute?.id === '404' || isNotFoundPath(Astro.url.pathname);
 const faHref = getPersianCounterpartPath(Astro.url.pathname);
 const copy = UI_COPY.en.banner;
 ---
 
-<aside
-  class="az-lang-banner"
-  data-az-lang-banner
-  data-pagefind-ignore
-  dir="rtl"
-  lang="fa"
-  aria-label={copy.regionLabel}
-  hidden
->
-  <div class="az-lang-banner__inner">
-    <p class="az-lang-banner__text">
-      {copy.message}
-      <a class="az-lang-banner__link" href={faHref}>{copy.actionLabel}</a>
-    </p>
-    <button
-      type="button"
-      class="az-lang-banner__close"
-      data-az-lang-dismiss
-      aria-label={copy.dismissLabel}
+{
+  !isNotFound && (
+    <aside
+      class="az-lang-banner"
+      data-az-lang-banner
+      data-pagefind-ignore
+      dir="rtl"
+      lang="fa"
+      aria-label={copy.regionLabel}
+      hidden
     >
-      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M6 6l12 12M18 6L6 18"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-        />
-      </svg>
-    </button>
-  </div>
-</aside>
+      <div class="az-lang-banner__inner">
+        <p class="az-lang-banner__text">
+          {copy.message}
+          <a class="az-lang-banner__link" href={faHref}>{copy.actionLabel}</a>
+        </p>
+        <button
+          type="button"
+          class="az-lang-banner__close"
+          data-az-lang-dismiss
+          aria-label={copy.dismissLabel}
+        >
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M6 6l12 12M18 6L6 18"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+      </div>
+    </aside>
+  )
+}
 
 <script>
   import { initLanguageBanner } from '../../lib/lang-banner.ts';

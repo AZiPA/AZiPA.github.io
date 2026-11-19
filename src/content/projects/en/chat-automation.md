@@ -1,11 +1,12 @@
 ---
 title: Telegram Business Assistant
-description: Automated workflow assistant for Telegram Business accounts with rule-based routing, structured templates, and full bilingual documentation.
+description: Serverless Telegram Business assistant for deleted message recovery, silent edit tracking, View-Once capture, and per-contact topics.
 date: 2026-11-19
 tags:
-  - telegram
-  - automation
-  - nodejs
+  - Telegram Serverless
+  - Telegram Business
+  - SQLite
+  - GitHub Actions
 lang: en
 status: active
 featured: true
