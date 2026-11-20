@@ -5,11 +5,13 @@ import type {
 import { chatAutomationTopic } from './topics/chat-automation.ts';
 import { telegramUploaderBotTopic } from './topics/telegram-uploader-bot.ts';
 import { telegramUploaderBotCloudflareTopic } from './topics/telegram-uploader-bot-cloudflare.ts';
+import { telegramWidgetBotTopic } from './topics/telegram-widget-bot.ts';
 
 export const SIDEBAR_TOPICS: StarlightSidebarTopicsUserConfig = [
   chatAutomationTopic,
   telegramUploaderBotTopic,
   telegramUploaderBotCloudflareTopic,
+  telegramWidgetBotTopic,
 ];
 
 export const TOPICS_EXCLUDE: NonNullable<
