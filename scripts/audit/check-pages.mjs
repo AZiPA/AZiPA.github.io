@@ -16,6 +16,12 @@ const AUDITED_PAGES = [
     is404: false,
     types: ['BreadcrumbList', 'TechArticle'],
   },
+  { rel: 'projects/telegram-widget-bot/index.html', is404: false, types: ['BreadcrumbList', 'SoftwareSourceCode'] },
+  {
+    rel: 'fa/projects/telegram-widget-bot/widget-engine/index.html',
+    is404: false,
+    types: ['BreadcrumbList', 'TechArticle'],
+  },
 ];
 
 function parseAttrs(raw) {

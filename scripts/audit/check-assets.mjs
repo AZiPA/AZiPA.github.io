@@ -96,9 +96,11 @@ export async function auditAssets(distDir, errors) {
 
   summary.sitemapUrls = locs.length;
   summary.hreflangLinks = hreflangs.length;
-  if (locs.length !== 36) errors.push(`dist/sitemap-0.xml expected 36 URLs, got ${locs.length}`);
-  if (hreflangs.length !== 72) {
-    errors.push(`dist/sitemap-0.xml expected 72 xhtml:link hreflang tags, got ${hreflangs.length}`);
+  if (locs.length < 46) errors.push(`dist/sitemap-0.xml expected >= 46 URLs, got ${locs.length}`);
+  if (hreflangs.length !== locs.length * 2) {
+    errors.push(
+      `dist/sitemap-0.xml expected ${locs.length * 2} xhtml:link hreflang tags (2 per URL), got ${hreflangs.length}`
+    );
   }
   return summary;
 }
