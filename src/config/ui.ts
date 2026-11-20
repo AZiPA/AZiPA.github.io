@@ -48,6 +48,10 @@ const en = {
     actionLabel: 'مشاهده نسخه فارسی',
     dismissLabel: 'بستن اعلان زبان فارسی',
   },
+  seo: {
+    homeLabel: 'Home',
+    ogImageAlt: 'AZiPA — Open-source documentation hub for Telegram Serverless and Cloudflare Workers bots',
+  },
 };
 
 export type LocaleUiCopy = typeof en;
@@ -93,6 +97,10 @@ const fa: LocaleUiCopy = {
     projectsCta: 'بازگشت به پروژه‌ها',
   },
   banner: en.banner,
+  seo: {
+    homeLabel: 'خانه',
+    ogImageAlt: 'AZiPA — مرکز مستندات فارسی و انگلیسی پروژه‌های متن‌باز تلگرام سرورلس و کلادفلر ورکرز',
+  },
 };
 
 export const UI_COPY: Record<Locale, LocaleUiCopy> = { en, fa };

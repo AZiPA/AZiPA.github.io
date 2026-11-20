@@ -3,7 +3,7 @@ import EmptyPage from '../components/layout/EmptyPage.astro';
 import PageHero from '../components/layout/PageHero.astro';
 import ProjectCatalog from '../components/catalog/ProjectCatalog.astro';
 import { UI_COPY } from '../config/ui.ts';
-import { buildWebSiteJsonLd } from '../lib/seo.ts';
+import { buildWebSiteJsonLd } from '../lib/seo/site.ts';
 
 const lang = 'en';
 const copy = UI_COPY[lang].home;
