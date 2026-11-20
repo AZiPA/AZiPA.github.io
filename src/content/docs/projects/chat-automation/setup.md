@@ -7,7 +7,7 @@ Deploying **Telegram Business Assistant** requires a Telegram account with **Tel
 
 ## 1. Prerequisites & `@BotFather` Setup
 
-Open `@BotFather` in Telegram and complete these steps for your bot:
+Open [`@BotFather`](https://t.me/BotFather) in Telegram and complete these steps for your bot:
 
 1. **Enable Serverless:** Go to `@BotFather → Your Bot → Serverless` and activate Telegram Serverless hosting.
 2. **Copy the CLI Access Token:** Open `Serverless → CLI Access → Access token` and copy the token formatted as `app<id>:<secret>`.
@@ -15,6 +15,9 @@ Open `@BotFather` in Telegram and complete these steps for your bot:
 4. **Disable Group Access:** Open `Bot Settings → Allow Groups` and turn it **OFF** for privacy.
 5. **Enable Threaded Mode *(Optional)*:** Open `Bot Settings → Threads Settings → Threaded Mode` and turn it **ON** to organize alerts into per-contact topics.
 6. **Find Your Numeric Telegram User ID (`OWNER_ID`):** Record your numeric user ID (positive integer digits only, such as `123456789`).
+7. **Restrict Bot Usage (`@BotFather` Mini App):** Open the **`@BotFather` Mini App**, select your bot, navigate to `Bot Settings → Access`, and enable **Restrict bot usage** so unauthorized users cannot interact with the private assistant bot at the Telegram platform level (while Telegram Business updates for the connected owner account continue normally). Then check **Allowed users**:
+   - **Same account (Bot creator = `OWNER_ID`):** If you created the bot with the same Telegram account whose ID is set in `OWNER_ID`, your account is listed in **Allowed users** automatically—simply verify it is present.
+   - **Different account (Bot created on Account A, used on Business Account B):** If you created the bot on one account and run it on another account (whose numeric ID is stored in `OWNER_ID` in GitHub Secrets or local bootstrap), you **must** open **Allowed users** and explicitly select and add that `OWNER_ID` account; otherwise Telegram will block it from sending `/start` or using owner commands even when `OWNER_ID` is configured in the bot.
 
 :::caution[Use the Serverless CLI Access Token]
 `TGCLOUD_TOKEN` MUST be the Serverless **CLI Access Token** (`app<id>:<secret>`) from `Serverless → CLI Access → Access token`—**not** the regular Bot API HTTP token (`123456789:AAH...`). Standard HTTP bot tokens will fail upfront validation.
@@ -52,7 +55,7 @@ Each CI run executes this 6-step sequence:
 6. Reconcile webhook status with `npx tgcloud webhook sync` and `npx tgcloud webhook`.
 
 :::tip[Rotating `OWNER_ID` Safely]
-To transfer the bot to a different Telegram account, update the `OWNER_ID` repository secret and re-run the deployment workflow. `setOwnerId()` clears stale `contact_topics`, `connections`, and `topics_disabled_until` for the previous owner while keeping archived `messages` intact.
+To transfer the bot to a different Telegram account, update the `OWNER_ID` repository secret and re-run the deployment workflow. `setOwnerId()` clears stale `contact_topics`, `connections`, and `topics_disabled_until` for the previous owner while keeping archived `messages` intact. When changing `OWNER_ID` to a new account, you must also update **Allowed users** in the `@BotFather` Mini App (`Bot Settings → Access`).
 :::
 
 ### Option 2 — Local Deployment via `@tgcloud/cli`

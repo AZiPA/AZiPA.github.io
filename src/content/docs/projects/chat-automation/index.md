@@ -53,6 +53,7 @@ Handled via `edited_business_message`:
 
 - **Strict Ownership Enforcement:** Ownership resolves strictly from `owner_id` in `settings`. If missing or invalid, `getOwnerId()` returns `null` and all commands, business connections, and handlers refuse access.
 - **Zero Hardcoded Secrets & Clean Handoff:** Neither `TGCLOUD_TOKEN` nor `OWNER_ID` is hardcoded in source code. Updating `OWNER_ID` triggers `setOwnerId()`, cleaning up stale `contact_topics`, `connections`, and `topics_disabled_until` for the previous owner while keeping archived `messages` intact.
+- **Platform-Level Access Restriction:** Enabling **Restrict bot usage** (with the `OWNER_ID` account in **Allowed users**) in the `@BotFather` Mini App adds Telegram platform-level protection on top of the bot's fail-closed `OWNER_ID` check—see [Setup & Deployment](/projects/chat-automation/setup/).
 
 ### 6. Opportunistic Retention & Opt-In Debug Logging
 
