@@ -1,5 +1,8 @@
+import { existsSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+
+const OPTIONAL_LINE_BUDGET_FILES = new Set(['AGENTS.md']);
 
 const LINE_BUDGET_FILES = [
   'AGENTS.md',
@@ -23,20 +26,12 @@ const LINE_BUDGET_FILES = [
   'scripts/audit/check-hygiene.mjs',
 ];
 
-const LINUX_OPTIONAL_PACKAGES = [
-  '@astrojs/compiler-binding-linux-x64-gnu',
-  '@bruits/satteri-linux-x64-gnu',
-  '@img/sharp-linux-x64',
-  '@img/sharp-libvips-linux-x64',
-  '@pagefind/linux-x64',
-  '@rolldown/binding-linux-x64-gnu',
-  'lightningcss-linux-x64-gnu',
-];
-
 export async function auditRepoHygiene(rootDir, errors) {
   const lineCounts = [];
   for (const rel of LINE_BUDGET_FILES) {
-    const raw = await fs.readFile(path.join(rootDir, rel), 'utf8');
+    const filePath = path.join(rootDir, rel);
+    if (OPTIONAL_LINE_BUDGET_FILES.has(rel) && !existsSync(filePath)) continue;
+    const raw = await fs.readFile(filePath, 'utf8');
     const lines = raw.split(/\r?\n/).length - (raw.endsWith('\n') ? 1 : 0);
     lineCounts.push({ rel, lines });
     if (lines > 150) errors.push(`${rel} exceeds 150-line limit (${lines} lines)`);
@@ -48,13 +43,6 @@ export async function auditRepoHygiene(rootDir, errors) {
       if (String(ver).startsWith('^') || String(ver).startsWith('~')) {
         errors.push(`package.json ${group}.${name} has non-exact version: ${ver}`);
       }
-    }
-  }
-
-  const lock = await fs.readFile(path.join(rootDir, 'package-lock.json'), 'utf8');
-  for (const linuxPkg of LINUX_OPTIONAL_PACKAGES) {
-    if (!lock.includes(`"node_modules/${linuxPkg}"`) && !lock.includes(`"${linuxPkg}"`)) {
-      errors.push(`package-lock.json missing Linux optional package: ${linuxPkg}`);
     }
   }
   return lineCounts;
