@@ -37,9 +37,11 @@ This is the single source of truth for all humans and AI agents working on this 
 - **File Size Budget:** Target **80–150 lines max** per code, config, schema, component, and CSS file. Proactively split growing logic into focused domain folders rather than allowing monolithic files.
 - **Canonical Directory Map:**
   - `scripts/validate-content.mjs` (thin CLI entrypoint) + `scripts/validate/*.mjs` (individual check modules: `fs-utils.mjs`, `frontmatter.mjs`, `persian-text.mjs`, `check-persian.mjs`, `check-docs.mjs`, `check-parity.mjs`).
+  - `scripts/generate-brand-assets.mjs` (manual `sharp` PNG rasterizer) + `scripts/audit-seo.mjs` + `scripts/audit/*.mjs` (post-build SEO & asset verifier).
+  - `public/` static SEO assets (`robots.txt`, `favicon.svg`, `site.webmanifest`, `favicon-96x96.png`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `og-default.png`, `googlef71a71b2c3a3c446.html`).
   - `src/config/*.ts` (`site.ts`, `locales.ts`, `topics.ts`, `redirects.ts`, `ui.ts`) imported by a thin `astro.config.mjs` and UI pages/components.
   - `src/schemas/*.ts` (`project.ts`) imported by a thin `src/content.config.ts`.
-  - UI & routing layers: `src/components/{layout,catalog,i18n,seo,overrides}/`, `src/lib/`, `src/styles/`, and `src/pages/` (for `/`, `/fa/`, `/about/`, `/fa/about/` via `EmptyPage`).
+  - UI, SEO & routing layers: `src/starlightRouteData.ts`, `src/components/{layout,catalog,i18n,seo,overrides}/`, `src/lib/seo/{site,project,head}.ts`, `src/styles/`, and `src/pages/`.
   - `src/content/i18n/{en,fa}.json` for Starlight UI localization strings.
 
 ---
@@ -102,3 +104,10 @@ This is the single source of truth for all humans and AI agents working on this 
   - Persian content (`src/content/projects/fa/**/*.md`, `src/content/docs/fa/**/*.{md,mdx}`, `src/content/i18n/fa.json`, and `src/config/ui.ts`) MUST use Persian `ی` (`\u06CC`) and `ک` (`\u06A9`), never Arabic `ي` (`\u064A`), `ى` (`\u0649`), or `ك` (`\u0643`) outside code blocks, inline code, and URLs.
   - Run `npm run validate:fix` to auto-normalize Arabic characters cleanly across frontmatter, Markdown bodies, and localized UI strings.
 - **Git Restriction:** Never execute `git` CLI commands (`git init`, `git status`, `git commit`, etc.) from automation/agent workflows in this workspace.
+
+---
+
+## 8. Technical SEO, Head Middleware & Verification
+
+- **Head Injection Architecture:** Global static icons, manifest, raster `og:image` / `twitter:image` (`https://azipa.github.io/og-default.png`, `1200×630`), and conditional `SITE_VERIFICATION` tags live in `STARLIGHT_HEAD` (`src/config/site.ts`). Per-route SEO enrichment—dual `light`/`dark` `theme-color` tags (bypassing Starlight `mergeHead()`'s `name`-only deduplication), `robots="noindex, follow"` on `/404.html` and `/fa/404/index.html`, localized `og:image:alt`/`twitter:image:alt`, `hreflang="x-default"` guard, and project Schema.org JSON-LD (`BreadcrumbList`, `SoftwareSourceCode`, `TechArticle`)—runs via `routeMiddleware` (`src/starlightRouteData.ts` → `src/lib/seo/`), with **no** `Head.astro` override.
+- **Verification Tokens & Brand Assets:** Paste optional meta tokens into `SITE_VERIFICATION` in `src/config/site.ts` (empty values emit zero meta tags; never delete `public/googlef71a71b2c3a3c446.html`). Regenerate PNG brand assets manually with `node scripts/generate-brand-assets.mjs` and verify `dist/` SEO invariants with `node scripts/audit-seo.mjs`.

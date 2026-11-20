@@ -7,10 +7,13 @@ import starlightLinksValidator from 'starlight-links-validator';
 import {
   CUSTOM_CSS,
   CUSTOM_PAGE_LINKS,
+  FAVICON_PATH,
   PAGEFIND_CONFIG,
   SITE_TITLE,
   SITE_URL,
   STARLIGHT_COMPONENTS,
+  STARLIGHT_HEAD,
+  STARLIGHT_ROUTE_MIDDLEWARE,
   TRAILING_SLASH,
 } from './src/config/site.ts';
 import { DEFAULT_LOCALE, LOCALES } from './src/config/locales.ts';
@@ -25,8 +28,11 @@ export default defineConfig({
     mermaid(),
     starlight({
       title: SITE_TITLE,
+      favicon: FAVICON_PATH,
       defaultLocale: DEFAULT_LOCALE,
       locales: LOCALES,
+      head: STARLIGHT_HEAD,
+      routeMiddleware: STARLIGHT_ROUTE_MIDDLEWARE,
       customCss: CUSTOM_CSS,
       components: STARLIGHT_COMPONENTS,
       pagefind: PAGEFIND_CONFIG,
